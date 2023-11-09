@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 23:25:11 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/08 21:08:30 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 01:27:38 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int	init_philo(t_data *data)
 		if (!data->thread_id)
 			return (error(MALLOC, data));
 		pthread_mutex_init(&data->philo[i].f_own_lock, NULL);
+		pthread_mutex_init(&data->philo[i].m_cnt, NULL);
+		pthread_mutex_init(&data->philo[i].eat_m, NULL);
 	}
 	return (0);
 }
@@ -77,8 +79,7 @@ int	init_1(t_data *data, char **av)
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->lock, NULL);
 	pthread_mutex_init(&data->is_dead, NULL);
-	pthread_mutex_init(&data->philo->m_cnt, NULL);
-	pthread_mutex_init(&data->philo->eat_m, NULL);
+
 	init_philo(data);
 	create_forks(data);
 	return (0);
@@ -95,7 +96,15 @@ void	*one_more(void *info)
 		pthread_mutex_lock(&philo->eat_m);
 		pthread_mutex_lock(&philo->data->is_dead);
 		if (get_time() >= philo->die_tm && philo->eating == 0)
+		{
 			message(DEAD, philo);
+			pthread_mutex_unlock(&philo->eat_m);
+			pthread_mutex_unlock(&philo->data->is_dead);
+			pthread_mutex_lock(&philo->m_cnt);
+			pthread_mutex_lock(&philo->eat_m);
+			return ((void *)(1));
+		}
+			
 		pthread_mutex_unlock(&philo->eat_m);
 		pthread_mutex_unlock(&philo->data->is_dead);
 		pthread_mutex_lock(&philo->m_cnt);
@@ -124,7 +133,6 @@ void	*one_more(void *info)
 int	action(t_data *data)
 {
 	int			i;
-	// int			nbr = 0;
 	pthread_t	arg_six;
 
 	data->start_time = get_time();
@@ -138,15 +146,13 @@ int	action(t_data *data)
 	{
 		if (pthread_create(&data->thread_id[i], NULL, &routine, &data->philo[i]))
 			return (error(TH_CREATE, data));
-		// nbr++;
-		// mysleep(1);
 	}
 	if (data->nbr_philo == 1)
 		return (0);
 	i = -1;
 	while (++i < data->nbr_philo)
 	{
-		if(pthread_join(data->thread_id[i], NULL))
+		if (pthread_join(data->thread_id[i], NULL))
 			return (error(TH_JOIN, data));
 	}
 	return (0);

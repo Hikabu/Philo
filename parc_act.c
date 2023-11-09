@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:11:53 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/08 20:54:55 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 00:56:34 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ void	drop_forks(t_philo *philo)
 
 void	eat(t_philo *philo)
 {
-	take_forks(philo);
+	if (philo->data->dead == 0)
+		take_forks(philo);
 	if (philo->data->nbr_philo == 1)
 		return ;
 	pthread_mutex_lock(&(philo->eat_m));
 	philo->eating = 1;
 	pthread_mutex_unlock(&(philo->eat_m));
 	pthread_mutex_lock(&(philo->data->is_dead));
-	philo->data->die_tm = get_time() + philo->data->die_tm;
+	philo->die_tm = get_time() + philo->data->die_tm;
 	pthread_mutex_unlock(&(philo->data->is_dead));
 	message(EAT, philo);
 	pthread_mutex_lock(&(philo->m_cnt));

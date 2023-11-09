@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 11:28:07 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/08 20:12:23 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 00:31:11 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	*stalker(void *infa)
 
 	philo = (t_philo *)infa;
 	pthread_mutex_lock(&philo->data->print);
-	// printf("data val: %d", philo->data->dead);
+	printf("data val: %d", philo->data->dead);
 	pthread_mutex_unlock(&philo->data->print);
 	while (philo->data->dead == 0)
 	{

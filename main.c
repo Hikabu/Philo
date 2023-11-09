@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 10:36:24 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/08 20:29:05 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/09 23:54:58 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ void	message(char *str, t_philo *philo)
 		pthread_mutex_lock(&philo->data->print);
 		printf("%llu philo[%d] %s\n", time, philo->id, str);
 		pthread_mutex_unlock(&philo->data->print);
-		pthread_mutex_lock(&philo->data->is_dead);
+		// pthread_mutex_lock(&philo->data->is_dead);
 		philo->data->dead = 1;
-		pthread_mutex_unlock(&philo->data->is_dead);
+		// pthread_mutex_unlock(&philo->data->is_dead);
 		mysleep(5);
 	}
 	if (!philo->data->dead)
