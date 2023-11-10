@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 10:36:24 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/09 23:54:58 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 18:10:56 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	ft_destroy(t_data *data)
 	}
 	pthread_mutex_destroy(&data->print);
 	pthread_mutex_destroy(&data->lock);
+	pthread_mutex_destroy(&data->mutex_dead);
 	free(data->thread_id);
 }
 int	error(char *str, t_data *data)
@@ -48,25 +49,30 @@ int	error(char *str, t_data *data)
 void	message(char *str, t_philo *philo)
 {
 	long long	time;
-
 	
+	printf("in messsage get: %lld\n", get_time());
+	printf("in messsage start: %lld\n", philo->data->start_time);
 	time = get_time() - philo->data->start_time;
+	printf("in messsage tim : %lld\n", time);
 	if (ft_strcmp(DEAD, str) == 0 && philo->data->dead == 0)
 	{
 		pthread_mutex_lock(&philo->data->print);
 		printf("%llu philo[%d] %s\n", time, philo->id, str);
 		pthread_mutex_unlock(&philo->data->print);
-		// pthread_mutex_lock(&philo->data->is_dead);
+		pthread_mutex_lock(&philo->data->mutex_dead);
 		philo->data->dead = 1;
-		// pthread_mutex_unlock(&philo->data->is_dead);
+		pthread_mutex_unlock(&philo->data->mutex_dead);
 		mysleep(5);
 	}
+	pthread_mutex_lock(&philo->data->mutex_dead);
 	if (!philo->data->dead)
 	{
+		pthread_mutex_unlock(&philo->data->mutex_dead);
 		pthread_mutex_lock(&philo->data->print);
 		printf("%llu philo[%d] %s\n", time, philo->id, str);
 		pthread_mutex_unlock(&philo->data->print);
 	}
+	pthread_mutex_unlock(&philo->data->mutex_dead);
 }
 int main(int ac, char **av)
 {
@@ -76,7 +82,7 @@ int main(int ac, char **av)
 	{
 		if (!pars(&data, av))
 			return (error("wrong arguments", NULL));
-		get_time();
+		// get_time();
 		if (init_1(&data, av))
 			return (1);
 		if (ft_atoi(av[1]) == 1)

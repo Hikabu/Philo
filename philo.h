@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 11:51:40 by vfedorov          #+#    #+#             */
-/*   Updated: 2023/11/08 20:50:57 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 17:10:35 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_data
 	pthread_mutex_t fork[200];
 	pthread_mutex_t print;
 	pthread_mutex_t is_dead;
+	pthread_mutex_t mutex_dead;
 	pthread_mutex_t lock;
 } t_data;
 

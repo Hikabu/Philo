@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 11:28:07 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/10 00:31:11 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 18:11:47 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ void	mysleep(useconds_t time)
 	long long	start;
 
 	start = get_time();
+	// usleep(time * 950);
 	while (get_time() - start < time)
-		usleep(time / 10);
+		usleep(10);
 }
 void	*routine(void *info)
 {
@@ -45,13 +46,16 @@ void	*routine(void *info)
 		usleep(2500);
 	if (pthread_create(&philo->philosof, NULL, one_more, (void *)philo))
 		return ((void *)(1));
+	pthread_mutex_lock(&philo->data->mutex_dead);
 	while (philo->data->dead == 0)
-	{	
+	{
+		pthread_mutex_unlock(&philo->data->mutex_dead);
 		eat(philo);
 		if (philo->data->nbr_philo == 1)
 			break;
 		message(THINK, philo);
 	}
+	pthread_mutex_unlock(&philo->data->mutex_dead);
 	if (pthread_join(philo->philosof, NULL))
 		return((void *)(1));
 	if (philo->data->nbr_philo == 0)

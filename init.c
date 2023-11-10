@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 23:25:11 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/10 01:27:38 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/10 17:56:45 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	init_philo(t_data *data)
 		pthread_mutex_init(&data->philo[i].m_cnt, NULL);
 		pthread_mutex_init(&data->philo[i].eat_m, NULL);
 	}
+	pthread_mutex_init(&data->mutex_dead, NULL);
 	return (0);
 }
 
@@ -61,6 +62,7 @@ int	init_1(t_data *data, char **av)
 	long	chislo;
 
 	arg = 0;
+	data->nbr_meal = 0;
 	while (av[++arg])	
 	{
 		chislo = ft_atol(av[arg]);
@@ -74,6 +76,7 @@ int	init_1(t_data *data, char **av)
 			data->sleep_tm = chislo;
 		else if (arg == 5)
 			data->nbr_meal = chislo;
+		// printf("chislo - %ld\n", chislo);
 	}
 	data->dead = 0;
 	pthread_mutex_init(&data->print, NULL);
@@ -90,8 +93,10 @@ void	*one_more(void *info)
 	t_philo	*philo;
 
 	philo = (t_philo *)info;
+	pthread_mutex_lock(&philo->data->mutex_dead); //?
 	while (philo->data->dead == 0)
 	{
+		pthread_mutex_unlock(&philo->data->mutex_dead); //?
 		pthread_mutex_lock(&philo->f_own_lock);
 		pthread_mutex_lock(&philo->eat_m);
 		pthread_mutex_lock(&philo->data->is_dead);
@@ -100,11 +105,10 @@ void	*one_more(void *info)
 			message(DEAD, philo);
 			pthread_mutex_unlock(&philo->eat_m);
 			pthread_mutex_unlock(&philo->data->is_dead);
-			pthread_mutex_lock(&philo->m_cnt);
-			pthread_mutex_lock(&philo->eat_m);
+			// pthread_mutex_lock(&philo->m_cnt);
+			// pthread_mutex_lock(&philo->eat_m);
 			return ((void *)(1));
 		}
-			
 		pthread_mutex_unlock(&philo->eat_m);
 		pthread_mutex_unlock(&philo->data->is_dead);
 		pthread_mutex_lock(&philo->m_cnt);
@@ -126,7 +130,9 @@ void	*one_more(void *info)
 			pthread_mutex_unlock(&philo->eat_m);
 		}
 		pthread_mutex_unlock(&philo->f_own_lock);
+		pthread_mutex_lock(&philo->data->mutex_dead);
 	}
+	pthread_mutex_unlock(&philo->data->mutex_dead);
 	return (NULL);
 }
 
@@ -136,6 +142,7 @@ int	action(t_data *data)
 	pthread_t	arg_six;
 
 	data->start_time = get_time();
+	printf("%lld\n", data->start_time);
 	if (data->nbr_meal > 0)
 	{
 		if (pthread_create(&arg_six, NULL, &stalker, &data->philo[0]))
