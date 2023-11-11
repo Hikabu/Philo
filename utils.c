@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfedorov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/20 21:13:05 by vfedorov          #+#    #+#             */
-/*   Updated: 2023/01/27 05:31:01 by vfedorov         ###   ########.fr       */
+/*   Created: 2023/11/11 12:06:46 by vfedorov          #+#    #+#             */
+/*   Updated: 2023/11/11 21:50:20 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "philo.h"
 
-int	ft_atoi(const char *str)
+void	erro(void)
 {
-	int	count;
-	int	i;
-	int	otr;
+	write(2, "error with argument\n", 20);
+}
+
+long	ft_atol(const char *str)
+{
+	int		count;
+	long	i;
+	long	otr;
 
 	count = 0;
 	i = 0;
 	otr = 1;
+	if (!str)
+		return (0);
 	while (str[count] == '\n' || str[count] == '\t' || str[count] == '\f'
 		|| str[count] == '\r' || str[count] == '\v' || str[count] == ' ')
 		count++;
@@ -33,5 +40,30 @@ int	ft_atoi(const char *str)
 		i = i * 10 + str[count] - 48;
 		count++;
 	}
+	if (str[count] != '\0')
+		erro();
 	return (otr * i);
+}
+
+int	ft_strcmp(char *str1, char *str2)
+{
+	int i;
+
+	i = 0;
+	while (str1 && str2 && str1[i] && str2[i] && str1[i] == str2[i])
+		i++;
+	return (str1[i] - str2[i]);
+}
+int	ft_strisnum(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!str[i] || !(str[i] >= 48 && str[i] <= 57))
+			return (0);
+		i++;
+	}
+	return (1);
 }
