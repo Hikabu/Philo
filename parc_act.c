@@ -6,7 +6,7 @@
 /*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:11:53 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/11 22:32:32 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/11 22:35:21 by vfedorov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int pars(t_data *data, char **av)
 {
 	int	i;
 	(void)data;
+	printf("lslsl\n");
 	i = 1;
 	while (av[i])
 	{
