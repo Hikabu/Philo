@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valeriafedorova <valeriafedorova@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 23:25:11 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/11 21:16:38 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/12 00:53:06 by valeriafedo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 void	init_mutex(t_data *data)
 {
@@ -56,7 +56,7 @@ int	init_philo(t_data *data, char **av)
 		data->philo[i].long_last_eat = 0;
 		i++;
 	}
-	return (0); 
+	return (0);
 }
 
 int	init_1(t_data *data, char **av)
@@ -81,10 +81,9 @@ int	init_1(t_data *data, char **av)
 int	is_dead(t_philo *philo)
 {
 	int	i;
+
 	pthread_mutex_lock(philo->mutex_dead);
 	i = *(philo->die);
 	pthread_mutex_unlock(philo->mutex_dead);
 	return (i);
 }
-
-

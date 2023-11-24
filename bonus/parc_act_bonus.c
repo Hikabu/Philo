@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parc_act.c                                         :+:      :+:    :+:   */
+/*   parc_act_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valeriafedorova <valeriafedorova@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:11:53 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/11 22:35:21 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/12 00:52:29 by valeriafedo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 void	*routine(t_philo *philo)
 {
@@ -39,11 +39,11 @@ void	*routine(t_philo *philo)
 	return (NULL);
 }
 
-int pars(t_data *data, char **av)
+int	pars(t_data *data, char **av)
 {
 	int	i;
+	
 	(void)data;
-	printf("lslsl\n");
 	i = 1;
 	while (av[i])
 	{

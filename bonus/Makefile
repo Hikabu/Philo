@@ -5,7 +5,8 @@ HEADERS 		=	philo.h
 OBJ 			=	$(SRCS:.c=.o)
 CFLAGS 			=	-Wall -Wextra -Werror -g3 #-fsanitize=address
 RM				=	rm -rf
-BSRC			=	
+BSRC			=	main_bonus.c time_bonus.c parc_act_bonus.c init_bonus.c \
+					utils_bonus.c
 BOBJ 			=	$(BSRC:.c=.o)
 
 YELLOW  = \033[33m

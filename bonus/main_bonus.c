@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfedorov <vfedorov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: valeriafedorova <valeriafedorova@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 10:36:24 by valeriafedo       #+#    #+#             */
-/*   Updated: 2023/11/11 22:29:29 by vfedorov         ###   ########.fr       */
+/*   Updated: 2023/11/12 00:53:10 by valeriafedo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 void	message(char *str, t_philo *philo, long long time)
 {
@@ -19,6 +19,7 @@ void	message(char *str, t_philo *philo, long long time)
 		printf("%llu philo[%d] %s\n", time, philo->id, str);
 	pthread_mutex_unlock(philo->mutex_print);
 }
+
 int	mb_philo_dead(t_data *data)
 {
 	int	i;
@@ -33,7 +34,8 @@ int	mb_philo_dead(t_data *data)
 			data->dead = 1;
 			pthread_mutex_unlock(&data->mutex_dead);
 			pthread_mutex_lock(&data->mutex_print);
-				printf("%llu philo[%d] died\n", get_time() - data->philo[i].long_last_eat, data->philo[i].id);
+			printf("%llu philo[%d] died\n", get_time()
+				- data->philo[i].long_last_eat, data->philo[i].id);
 			pthread_mutex_unlock(&data->mutex_print);
 			pthread_mutex_unlock(&(data->philo[i].last_eat));
 			return (1);
@@ -42,12 +44,13 @@ int	mb_philo_dead(t_data *data)
 	}
 	return (0);
 }
+
 int	god_safe_philo(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	while (i < data->nbr_philo && data->nbr_meal != -1) 
+	while (i < data->nbr_philo && data->nbr_meal != -1)
 	{
 		pthread_mutex_lock(&(data->philo[i].eated));
 		if (data->philo[i].cnt_meal >= data->nbr_meal)
@@ -70,6 +73,7 @@ int	god_safe_philo(t_data *data)
 	}
 	return (0);
 }
+
 void	ft_destroy(t_data *data)
 {
 	int	i;
@@ -83,10 +87,9 @@ void	ft_destroy(t_data *data)
 	}
 	pthread_mutex_destroy(&data->mutex_dead);
 	pthread_mutex_destroy(&data->mutex_print);
-	// free(data->nbr_philo);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_data	data;
 	int		i;
@@ -103,8 +106,8 @@ int main(int ac, char **av)
 		init_mutex(&data);
 		while (++i < data.nbr_philo)
 		{
-			pthread_create(&(data.philo[i].philosof), NULL, (t_thread_handler)(&routine),
-				&(data.philo[i]));
+			pthread_create(&(data.philo[i].philosof), NULL,
+				(t_thread_handler)(&routine), &(data.philo[i]));
 		}
 		while (1)
 		{
@@ -118,7 +121,6 @@ int main(int ac, char **av)
 				pthread_join(data.philo[i].philosof, NULL);	
 		}
 		ft_destroy(&data);
-		system("leaks philo");
 	}
 	else
 		return (printf("wrong arguments\n"));
